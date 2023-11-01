@@ -30,7 +30,9 @@ please join [our Slack][netbox-docker-slack] and ask for help in the [`#netbox-d
 ---
 
 based from https://github.com/netbox-community/netbox-docker/blob/release/docker-compose.yml
+
 created from helm create
+
 helm version: version.BuildInfo{Version:"v3.13.1", GitCommit:"3547a4b5bf5edb5478ce352e18858d8a552a4110", GitTreeState:"clean", GoVersion:"go1.20.8"}
 
 ---
