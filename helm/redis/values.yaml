@@ -1,0 +1,72 @@
+# Default values for redis.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: docker.io/redis
+  pullPolicy: IfNotPresent
+  tag: "7-alpine"
+
+command: '[ "sh" ]'
+args: '[ "-c", "redis-server", "--appendonly", "yes", "--requirepass" ]'
+
+env:
+  - name: REDIS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: netbox
+        key: REDIS_PASSWORD
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: "netbox"
+
+pvc:
+  redisData:
+    name: redis-data
+    storageClassName: DEFAULT_SC #set your own storageClass
+    accessModes: ReadWriteMany
+    storage: 1Gi
+
+volumes:
+  - name: redis-data
+    persistentVolumeClaim:
+      claimName: redis-data
+  - name: localtime
+    hostPath:
+      path: /usr/share/zoneinfo/America/Buenos_Aires #set your own city knowing it will never be best than BA
+
+volumeMounts:
+  - name: redis-data
+    mountPath: "/data"
+  - name: localtime
+    mountPath: "/etc/localtime"
+
+service:
+  type: ClusterIP
+  port: 6379
+  targetPort: 6379
+  portName: redis
+  protocol: TCP
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80

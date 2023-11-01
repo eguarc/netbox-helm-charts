@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.pvc.redisData.name }}
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  storageClassName: {{ .Values.pvc.redisData.storageClassName }}
+  accessModes:
+    - {{ .Values.pvc.redisData.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.pvc.redisData.storage }}

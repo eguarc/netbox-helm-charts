@@ -1,0 +1,151 @@
+# Default values for netbox-worker
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: netboxcommunity/netbox
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "v3.6.4-2.7.0"
+
+command: '[ "/opt/netbox/venv/bin/python" ]'
+args: '[ "/opt/netbox/netbox/manage.py", "rqworker" ]'
+
+env:
+  - name: CORS_ORIGIN_ALLOW_ALL
+    value: "True"
+  - name: DB_HOST
+    value: "postgres.svc.cluster.local" #your own db host
+  - name: DB_NAME
+    value: "netbox"
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: netbox
+        key: DB_PASSWORD
+  - name: DB_USER
+    value: "netbox_usr"
+  - name: EMAIL_FROM
+    value: "netbox@domain.com"
+  - name: EMAIL_PASSWORD
+    value:
+  - name: EMAIL_PORT
+    value: "25"
+  - name: EMAIL_SERVER
+    value: "smpt.svc.cluster.local" #your own smtp
+  - name: EMAIL_TIMEOUT
+    value: "5"
+  - name: EMAIL_USERNAME
+    value: "netbox"
+  - name: GRAPHQL_ENABLED
+    value: "true"
+  - name: HOUSEKEEPING_INTERVAL
+    value: "86400"
+  - name: MEDIA_ROOT
+    value: "/opt/netbox/netbox/media"
+  - name: METRICS_ENABLED
+    value: "false"
+  - name: REDIS_CACHE_DATABASE
+    value: "1"
+  - name: REDIS_CACHE_HOST
+    value: "redis-cache.netbox.svc.cluster.local"
+  - name: REDIS_CACHE_PORT
+    value: "6379"
+  - name: REDIS_CACHE_INSECURE_SKIP_TLS_VERIFY
+    value: "false"
+  - name: REDIS_CACHE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: netbox
+        key: REDIS_CACHE_PASSWORD
+  - name: REDIS_CACHE_SSL
+    value: "false"
+  - name: REDIS_DATABASE
+    value: "0"
+  - name: REDIS_HOST
+    value: "redis.netbox.svc.cluster.local"
+  - name: REDIS_PORT
+    value: "6379"
+  - name: REDIS_INSECURE_SKIP_TLS_VERIFY
+    value: "false"
+  - name: REDIS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: netbox
+        key: REDIS_PASSWORD
+  - name: REDIS_SSL
+    value: "false"
+  - name: RELEASE_CHECK_URL
+    value: "https://api.github.com/repos/netbox-community/netbox/releases"
+  - name: SECRET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: netbox
+        key: SECRET_KEY
+  - name: SKIP_SUPERUSER
+    value: "True"
+  - name: WEBHOOKS_ENABLED
+    value: "True"
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: "netbox"
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  runAsUser: 999
+
+volumes: 
+  - name: netbox-media
+    persistentVolumeClaim:
+      claimName: media
+  - name: netbox-reports
+    persistentVolumeClaim:
+      claimName: reports
+  - name: netbox-scripts
+    persistentVolumeClaim:
+      claimName: scripts
+  - name: localtime
+    hostPath:
+      path: /usr/share/zoneinfo/America/Buenos_Aires #set your own city knowing it will never be best than BA
+
+volumeMounts:
+  - name: netbox-media
+    mountPath: "/opt/netbox/netbox/media"
+  - name: netbox-reports
+    mountPath: "/opt/netbox/netbox/reports"
+  - name: netbox-scripts
+    mountPath: "/opt/netbox/netbox/scripts"
+  - name: localtime
+    mountPath: "/etc/localtime"
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80

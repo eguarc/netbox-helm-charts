@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.pvc.media.name }}
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  storageClassName: {{ .Values.pvc.media.storageClassName }}
+  accessModes:
+    - {{ .Values.pvc.media.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.pvc.media.storage }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.pvc.reports.name }}
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  storageClassName: {{ .Values.pvc.reports.storageClassName }}
+  accessModes:
+    - {{ .Values.pvc.reports.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.pvc.reports.storage }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.pvc.scripts.name }}
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  storageClassName: {{ .Values.pvc.scripts.storageClassName }}
+  accessModes:
+    - {{ .Values.pvc.scripts.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.pvc.scripts.storage }}
