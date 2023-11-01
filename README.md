@@ -37,17 +37,19 @@ helm version: version.BuildInfo{Version:"v3.13.1", GitCommit:"3547a4b5bf5edb5478
 
 ---
 
+kubectl create ns netbox
+
 kubectl apply -n netbox -f netbox/secrets.yaml
 
-helm upgrade -i netbox -f netbox/values.yaml netbox/
+helm upgrade -i netbox -n netbox -f netbox/values.yaml netbox/
 
-helm upgrade -i netbox-worker -f netbox-worker/values.yaml netbox/
+helm upgrade -i netbox-worker -n netbox -f netbox-worker/values.yaml netbox/
 
-helm upgrade -i netbox-housekeeping -f netbox-housekeeping/values.yaml netbox-housekeeping/
+helm upgrade -i netbox-housekeeping -n netbox -f netbox-housekeeping/values.yaml netbox-housekeeping/
 
-helm upgrade -i redis -f redis/values.yaml redis/
+helm upgrade -i redis -n netbox -f redis/values.yaml redis/
 
-helm upgrade -i redis-cache -f redis-cache/values.yaml redis-cache/
+helm upgrade -i redis-cache -n netbox -f redis-cache/values.yaml redis-cache/
 
 
 ---
