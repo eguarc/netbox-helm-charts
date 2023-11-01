@@ -30,18 +30,25 @@ based from https://github.com/netbox-community/netbox-docker/blob/release/docker
 
 created from `helm create` command
 
-`$ helm version
- version.BuildInfo{Version:"v3.13.1", GitCommit:"3547a4b5bf5edb5478ce352e18858d8a552a4110", GitTreeState:"clean", GoVersion:"go1.20.8"}`
+`helm version`
+
+ `version.BuildInfo{Version:"v3.13.1", GitCommit:"3547a4b5bf5edb5478ce352e18858d8a552a4110", GitTreeState:"clean", GoVersion:"go1.20.8"}`
 
 ---
 
-`kubectl create ns netbox
-kubectl apply -n netbox -f netbox/secrets.yaml
-helm upgrade -i netbox -n netbox -f netbox/values.yaml netbox/
-helm upgrade -i netbox-worker -n netbox -f netbox-worker/values.yaml netbox/
-helm upgrade -i netbox-housekeeping -n netbox -f netbox-housekeeping/values.yaml netbox-housekeeping/
-helm upgrade -i redis -n netbox -f redis/values.yaml redis/
-helm upgrade -i redis-cache -n netbox -f redis-cache/values.yaml redis-cache/`
+`kubectl create ns netbox`
+
+`kubectl apply -n netbox -f netbox/secrets.yaml`
+
+`helm upgrade -i netbox -n netbox -f netbox/values.yaml netbox/`
+
+`helm upgrade -i netbox-worker -n netbox -f netbox-worker/values.yaml netbox/`
+
+`helm upgrade -i netbox-housekeeping -n netbox -f netbox-housekeeping/values.yaml netbox-housekeeping/`
+
+`helm upgrade -i redis -n netbox -f redis/values.yaml redis/`
+
+`helm upgrade -i redis-cache -n netbox -f redis-cache/values.yaml redis-cache/`
 
 
 ---
@@ -49,7 +56,11 @@ misc/tricks:
 
 https://github.com/ray-project/ray/issues/8023 -- you must set in redis and redis-cache the value of the envvar REDIS_PASSWORD using redis-cli:
 
-`kubectl -n netbox -it [redis-pod] -- redis-cli
-127.0.0.1:6379> config set requirepass value-of-envvar
-kubectl -n netbox -it [redis-cache-pod] -- redis-cli
-127.0.0.1:6379> config set requirepass value-of-envvar`
+`kubectl -n netbox -it [redis-pod] -- redis-cli`
+
+`127.0.0.1:6379> config set requirepass value-of-envvar`
+
+`kubectl -n netbox -it [redis-cache-pod] -- redis-cli`
+
+`127.0.0.1:6379> config set requirepass value-of-envvar`
+
