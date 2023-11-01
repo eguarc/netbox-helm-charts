@@ -24,7 +24,7 @@ Images are built regularly using the code in that repository and are pushed to [
 
 
 ---
-This chart works with the (11-2023) latest version of netbox container image (v3.6.4-2.7.0).
+This charts works with the (11-2023) latest version of netbox container image (v3.6.4-2.7.0).
 
 based from https://github.com/netbox-community/netbox-docker/blob/release/docker-compose.yml
 
